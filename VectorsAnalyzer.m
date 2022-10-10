@@ -1,51 +1,15 @@
-function [contA,contN] = VectorsAnalyzer()
+function [contA,contN] = VectorsAnalyzer(data, PCNs, K)
     %clear, clc
     
-    % This array contains the index of PCNs
-    % PCNs 10
-    %PCNs = [2, 34, 38, 66, 67];
-    %PCNs = 70;
-    
-    % PCNs 11
-    %PCNs = [2, 3, 37, 55, 66];
-    %PCNs = 55;
-
-    load("m21_d2_04_CRF.mat");
-    % PCNs for m21_d2_04_CRF 10
-    %PCNs = [50, 6];
-    %PCNs = [62, 67];
-    %PCNs = [67, 3];
-    %PCNs = [30, 65, 73];
-    %PCNs = [50, 22];
-    %PCNs = [67, 3, 57];
-    %PCNs = [50, 6, 62, 67, 3, 30, 65, 73, 50, 22, 57];
-
-    % PCNs for m21_d2_04_CRF 01
-    %PCNs = [68, 75];
-    %PCNs = [62, 69];
-    %PCNs = [59, 37, 35];
-    %PCNs = [65, 48];
-    %PCNs = [75, 10];
-    %PCNs = [58, 40];
-    %PCNs = [68, 75, 62, 69, 59, 37, 35, 65, 48, 10, 58, 40];
-
-    % PCNs for m21_d2_04_CRF 10 double
-    %PCNs = [62, 45, 49];
-    %PCNs = [55, 63, 73];
-    %PCNs = [70, 72, 71];
-    %PCNs = [57, 63, 67];
-    %PCNs = [71, 74, 65];
-    %PCNs = [73, 71];
-
     % Now we read the data table, we need tho find the vectors where at least K
     % PCNs were active
     [rows, cols] = size(data);
+
+    % To get random data
+    %PCNs = randi(cols, 4, 1);
     
-    %PCNs = randi(cols, 1, 5);
-    
+    % Sort the array so the algorithm work properly
     PCNs = sort(PCNs);
-    
-    K = 2;
     
     % We're going to store the index of those vectors that has at least K
     % active neurons at the same time from the PCNs array
@@ -59,8 +23,8 @@ function [contA,contN] = VectorsAnalyzer()
     % First we iterate over all the rows
     for i = 1:rows
         % cont is only for counting
-        contActives = 0;
-        contNonA = 0;
+        contPCNs = 0;
+        contNonPCNs = 0;
         PCNsIt = 1;
         % For each row we iterate over all the columns
         for j = 1:cols
@@ -74,11 +38,11 @@ function [contA,contN] = VectorsAnalyzer()
                 % Now check what happend there
                 if j == PCNs(PCNsIt)
                     % Here a PNC was found, so we count it
-                    contActives = contActives + 1;
+                    contPCNs = contPCNs + 1;
                 else
-                    % He we didn't found any match of the current colum and PCN
+                    % Here we didn't found any match of the current colum and PCN
                     % so the  activity found is from another neuron
-                    contNonA = contNonA + 1;
+                    contNonPCNs = contNonPCNs + 1;
                 end
                 % Given the fact that all the PCNs are already sorted, if we
                 % found a match, the next match is going to be only after the
@@ -87,10 +51,11 @@ function [contA,contN] = VectorsAnalyzer()
             end
         end
         % Save the activity frequency for each type of neuron
-        activesVector(i) = contActives;      % PCNs
-        NonAVector(i) = contNonA;            % Non PCNs
-
-        if activesVector(i) >= K
+        activesVector(i) = contPCNs;      % PCNs
+        NonAVector(i) = contNonPCNs;            % Non PCNs
+    
+        % Here we saved the 
+        if contPCNs >= K
             contA = [contA, NonAVector(i)];
         else
             contN = [contN, NonAVector(i)];
@@ -99,15 +64,4 @@ function [contA,contN] = VectorsAnalyzer()
     
     contN = cell2mat(contN);
     contA = cell2mat(contA);
-    
-    disp(mean(contA));
-    disp(mean(contN));
-    
-    X = [contA, contN];
-    grp = [ones(size(contA)), 2.*ones(size(contN))];
-    
-    boxplot(X, grp)
-
-    contN = mean(contN);
-    contA = mean(contA);
 end

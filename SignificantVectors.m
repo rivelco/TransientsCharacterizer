@@ -1,6 +1,6 @@
 function finalFile =  SignificantVectors(fileToRead)
     if nargin == 0
-        % Change this to select a different
+        % Change this to select a different file
         fileToRead = uigetfile('*.*','Choose file to filter');
     end
 
@@ -11,9 +11,10 @@ function finalFile =  SignificantVectors(fileToRead)
     [~, colsD] = size(data);
     [~, colsU] = size(UDF);
     
-    % Select only those population vectors that has three or more active
+    % Select only those population vectors that has K or more active
     % neurons
-    indexes = find(sum(data, 2) >= 3);
+    K = 3;
+    indexes = find(sum(data, 2) >= K);
     
     % Create the new variables
     newData = zeros(length(indexes), colsD);
@@ -24,14 +25,24 @@ function finalFile =  SignificantVectors(fileToRead)
         newData(i, :) = data(indexes(i), :);
         newUDF(i, :) = UDF(indexes(i), :);
     end
+
+    % Make sure that coords has 3 dimensions, so it works right away with 
+    % the CRF program
+    [rowsC, colsC] = size(coords);
+    if colsC < 3
+        coords = [coords zeros(rowsC, 1)];
+    end
     
     % Change the variables, only for the name
     data = newData;
     UDF = newUDF;
     
+    % Change the filename to add the K used
+    filename = filename + "_K" + K;
+
     % Create the new file name
     [~, finalFile, ~] = fileparts(fileToRead);
-    finalFile = finalFile + "_sig";
+    finalFile = finalFile + "_K" + K;
     
     % Save the variables in a new file, ready to use
     save(finalFile, "filename", "coords", "data", "UDF");
