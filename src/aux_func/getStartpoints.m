@@ -7,6 +7,8 @@ function startsVec = getStartpoints(neuron)
         end
         if neuron(i) == 1 && neuron(prev) == 0
             startsVec = [startsVec, i];
+        elseif neuron(i) == 1 && i == 1
+            startsVec = [startsVec, i];
         end
     end
     startsVec = cell2mat(startsVec);

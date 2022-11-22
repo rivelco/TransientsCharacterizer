@@ -1,4 +1,4 @@
-function finalFile =  SignificantVectors(fileToRead)
+function finalFile =  SignificantVectors(fileToRead, K)
     if nargin == 0
         % Change this to select a different file
         fileToRead = uigetfile('*.*','Choose file to filter');
@@ -13,7 +13,7 @@ function finalFile =  SignificantVectors(fileToRead)
     
     % Select only those population vectors that has K or more active
     % neurons
-    K = 3;
+    %K = 5;
     indexes = find(sum(data, 2) >= K);
     
     % Create the new variables
