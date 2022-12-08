@@ -1,6 +1,5 @@
 function [dataNorm, startPoint, maxPoint] = FFoTimePoints(FFo, spikes)
-    % Get the start and end points of spikes, the endpoint is also the top
-    % this is given by Aratea software
+    % Get the start and max points of spikes, this is given by Aratea 
     startPoint = getStartpoints(spikes);
     maxPoint = getEndpoints(spikes);
     
