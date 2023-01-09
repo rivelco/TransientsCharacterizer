@@ -4,14 +4,14 @@
 clear, clc
 
 % CRFs file and K for significant vectors
-CRFsFile = "Stoixeion_01_CRFS";
+CRFsFile = "Stoixeion_01_04_CRFS";
 K = "3";
 
 % AUC and Node Strength file
-AUCnNSfile = "Stoixeion_01";
+AUCnNSfile = "Stoixeion_01_04";
 
 % Declare the FFo and Spikes containing file
-FFoFile = "ffo/" + "Stoixeion_01.mat";
+FFoFile = "ffo/" + "Stoixeion_01_04.mat";
 window = 100; Fs = 4; threshold = 0.8; spkUp = 50:101; spkDown = 101:200;
 [tausUp, tausDown, rsqUp, rsqDown] = exponentialFit(FFoFile, ...
                                     threshold, Fs, spkUp, spkDown, window);
@@ -25,16 +25,16 @@ tauPerCell = sortrows(tauPerCell, [2, 1]);
 binSize = 1;
 % Ensamble is the number of ensamble to analyze inside the same database,
 % it's always a number
-ensamble = 6;
+ensamble = 4;
 
 % Load the file to analyze, this file contains the coords, UDFs and spikes
 % data
 load("dbs/" + CRFsFile + "_K" + K + ".mat");
 % Now load the results from the CRF analysis, first from the phi 11
-load("crf/" + CRFsFile + "_K" + K + " 11/results.mat", 'PAPS_INDEXED');
+load("crf/" + CRFsFile + "_K" + K + " UDF 11/results.mat", 'PAPS_INDEXED');
 PAPS11 = PAPS_INDEXED;
 % And later for the phi 10
-load("crf/" + CRFsFile + "_K" + K + " 10/results.mat", 'PAPS_INDEXED');
+load("crf/" + CRFsFile + "_K" + K + " UDF 10/results.mat", 'PAPS_INDEXED');
 PAPS10 = PAPS_INDEXED;
 
 % Now load the results from the CRF analysis, first from the phi 11

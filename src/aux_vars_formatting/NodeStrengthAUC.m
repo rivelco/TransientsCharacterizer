@@ -1,8 +1,10 @@
 clear, clc
 
-load("crf\Stoixeion_05_CRFS_K3 11\results.mat")
-load("crf\Stoixeion_05_CRFS_K3 11\best_model.mat")
-load("dbs\Stoixeion_05_CRFS_K3.mat")
+disp("Working...")
+
+load("crf\Stoixeion_01_04_CRFS_K3 UDF 10\results.mat")
+load("crf\Stoixeion_01_04_CRFS_K3 UDF 10\best_model.mat")
+load("dbs\Stoixeion_01_04_CRFS_K3.mat")
 
 %import relevant information
 num_neur = size(data,2);
@@ -55,4 +57,5 @@ for i = 1:num_ens
     AUCs{i} = [cellInEnsamble; auc2];
 end
 
-save("CRF_Stoixeion_05_phi11.mat", "nodes_strength", "AUCs")
+save("CRF_Stoixeion_01_04_UDF_phi10.mat", "nodes_strength", "AUCs")
+disp("Done.")

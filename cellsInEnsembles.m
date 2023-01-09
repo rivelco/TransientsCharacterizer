@@ -1,20 +1,20 @@
 clear, clc
 
 % CRFs file and K for significant vectors
-CRFsFile = "Stoixeion_01_CRFS";
+CRFsFile = "Stoixeion_01_04_CRFS";
 K = "3";
 
 % AUC and Node Strength file
-AUCnNSfile = "Stoixeion_01";
+AUCnNSfile = "Stoixeion_01_04";
 
 % FFo file
-load("ffo\Stoixeion_01.mat")
+load("ffo\Stoixeion_01_04.mat")
 
 % Now load the results from the CRF analysis, first from the phi 11
-load("crf/" + CRFsFile + "_K" + K + " 11/results.mat", 'PAPS_INDEXED');
+load("crf/" + CRFsFile + "_K" + K + " UDF 11/results.mat", 'PAPS_INDEXED');
 PAPS11 = PAPS_INDEXED;
 % And later for the phi 10
-load("crf/" + CRFsFile + "_K" + K + " 10/results.mat", 'PAPS_INDEXED');
+load("crf/" + CRFsFile + "_K" + K + " UDF 10/results.mat", 'PAPS_INDEXED');
 PAPS10 = PAPS_INDEXED;
 
 % Now load the results from the CRF analysis, AUCs ans node strength, 
@@ -85,7 +85,7 @@ set(gca,'ytick',1:framesActiv);
 box on
 xlabel('frame'); ylabel('ensemble')
 
-ensembleQuery = 5;
+ensembleQuery = 1;
 PSNs = idxs10{ensembleQuery};
 I = intersect(cellsPerEnsemble{ensembleQuery}, PSNs);
 
@@ -125,7 +125,11 @@ for ensemble = 1:numEnsembles
     % Get the binary activity vector for the current ensemble
     actEnsemble = actPerEnsemble(ensemble, :);
     % Iterate over all of its PSNs (and PCNs)
-    for cell = 1:numPSN
+    smallerNum = numPSN;
+    if numPSN > numPCN
+        smallerNum = numPCN;
+    end
+    for cell = 1:smallerNum
         % Get the current cell for each set
         currPSN = PSNs(cell);
         currPCN = PCNs(cell);
@@ -160,7 +164,7 @@ for ensemble = 1:numEnsembles
     subplot(numEnsembles, 1, numEnsembles-ensemble+1)
     plot(1:numPSN, propAC10, 'Color', 'red')
     hold on
-    plot(1:numPSN, propAC11, 'Color', 'blue')
+    plot(1:numPCN, propAC11, 'Color', 'blue')
 end
 
 
